@@ -39,13 +39,20 @@ pipeline {
             }
         }
 
+
         stage('6. Deploy to Kubernetes') {
             steps {
+                bat 'echo KUBECONFIG=%USERPROFILE%\\.kube\\config'
+                bat 'whoami'
+                bat '"%KUBECTL%" config current-context'
+                bat '"%KUBECTL%" config view --minify -o jsonpath="{.clusters[0].cluster.server}"'
+                bat '"%KUBECTL%" get nodes'
                 bat '"%KUBECTL%" apply -f k8s/deployment.yaml'
                 bat '"%KUBECTL%" apply -f k8s/service.yaml'
                 bat '"%KUBECTL%" rollout status deployment/student-k8s-demo --timeout=120s'
             }
         }
+
 
         stage('7. Verify Deployment') {
             steps {
