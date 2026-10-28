@@ -6,6 +6,7 @@ pipeline {
         PYTHON = 'C:\\Users\\MADHAN\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
         DOCKER = 'C:\\Users\\MADHAN\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
         KUBECTL = 'C:\\Users\\MADHAN\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\kubectl.exe'
+        KUBECONFIG = 'C:\\Users\\MADHAN\\.kube\\config'
     }
 
     stages {
@@ -40,12 +41,9 @@ pipeline {
         }
 
 
-        stage('6. Deploy to Kubernetes') {
+       stage('6. Deploy to Kubernetes') {
             steps {
-                bat 'echo KUBECONFIG=%USERPROFILE%\\.kube\\config'
-                bat 'whoami'
                 bat '"%KUBECTL%" config current-context'
-                bat '"%KUBECTL%" config view --minify -o jsonpath="{.clusters[0].cluster.server}"'
                 bat '"%KUBECTL%" get nodes'
                 bat '"%KUBECTL%" apply -f k8s/deployment.yaml'
                 bat '"%KUBECTL%" apply -f k8s/service.yaml'
