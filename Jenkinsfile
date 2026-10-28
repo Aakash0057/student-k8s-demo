@@ -4,6 +4,8 @@ pipeline {
 
     environment {
         PYTHON = 'C:\\Users\\MADHAN\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
+        DOCKER = 'C:\\Users\\MADHAN\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
+        KUBECTL = 'C:\\Users\\MADHAN\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\kubectl.exe'
     }
 
     stages {
@@ -27,28 +29,28 @@ pipeline {
 
         stage('4. Build Docker Image') {
             steps {
-                bat 'docker build -t student-k8s-demo:v1 .'
+                bat '"%DOCKER%" build -t student-k8s-demo:v1 .'
             }
         }
 
         stage('5. Verify Docker Image') {
             steps {
-                bat 'docker image inspect student-k8s-demo:v1'
+                bat '"%DOCKER%" image inspect student-k8s-demo:v1'
             }
         }
 
         stage('6. Deploy to Kubernetes') {
             steps {
-                bat 'kubectl apply -f k8s/deployment.yaml'
-                bat 'kubectl apply -f k8s/service.yaml'
-                bat 'kubectl rollout status deployment/student-k8s-demo --timeout=120s'
+                bat '"%KUBECTL%" apply -f k8s/deployment.yaml'
+                bat '"%KUBECTL%" apply -f k8s/service.yaml'
+                bat '"%KUBECTL%" rollout status deployment/student-k8s-demo --timeout=120s'
             }
         }
 
         stage('7. Verify Deployment') {
             steps {
-                bat 'kubectl get pods'
-                bat 'kubectl get services'
+                bat '"%KUBECTL%" get pods'
+                bat '"%KUBECTL%" get services'
             }
         }
     }
